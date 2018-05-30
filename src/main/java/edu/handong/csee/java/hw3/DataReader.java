@@ -10,6 +10,8 @@ import java.io.InputStreamReader;
 import java.io.Reader;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
@@ -102,9 +104,40 @@ public class DataReader {
 			BufferedReader br = new BufferedReader(
 				new InputStreamReader(
 					new FileInputStream(file), "UTF-8"));
+			
+			br.readLine();
+			br.readLine();
+			br.readLine();
+			int currentYear = -1;
+			int currentMonth = -1;
+			int currentDay = -1;
+			String currentDate = "";
+			
+			while((thisLine = br.readLine()) != null) {
+				if(thisLine.matches("-+\\s[0-9]+.\\s[0-9]+.\\s[0-9]+.+")) {
+					String pattern = "-+\\s([0-9]+).\\s([0-9]+).\\s+([0-9]+).+";
+					Pattern r = Pattern.compile(pattern);
+					Matcher m = r.matcher(thisLine);
+					
+					if(m.find()) {
+						currentYear = Integer.parseInt(m.group(1));
+						currentMonth = Integer.parseInt(m.group(2));
+						currentDay = Integer.parseInt(m.group(3));
+					}
+					currentDate = getCurrentDate(currentYear,currentMonth,currentDay);
+					continue;
+				}
+				if(thisLine.matches("(\\[.+\\])\\s(\\[.+\\])\\s.+")) {
+					
+				}
+			}
 		}
 		catch(Exception e){
 			e.printStackTrace();
 		}
+	}
+	
+	private String getCurrentDate(int year, int month, int day) {
+		return String.valueOf(year) + String.valueOf(month) + String.valueOf(day);
 	}
 }
