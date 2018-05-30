@@ -98,7 +98,7 @@ public class DataReader {
 		return false;
 	}
 	
-	private void getMessagesFromTXTFiles(File file){
+	public void getMessagesFromTXTFiles(File file){
 		String thisLine = "";
 		try {
 			BufferedReader br = new BufferedReader(
@@ -128,7 +128,24 @@ public class DataReader {
 					continue;
 				}
 				if(thisLine.matches("(\\[.+\\])\\s(\\[.+\\])\\s.+")) {
+					String pattern = "\\[(.+)\\]\\s(\\[.+\\])\\s(.+)";
+					Pattern r = Pattern.compile(pattern);
+					Matcher m = r.matcher(thisLine);
 					
+					if(m.find()) {
+						String user = m.group(1);
+						String time = m.group(2);
+						String strMessage = m.group(3);
+						
+						Message message = new Message(currentDate, getDateTime(currentDate,time),user,strMessage);
+
+						if(!messages.containsKey(message.getUser())) {
+							messages.put(user, new ArrayList<Message>());
+						}
+						
+						if(!existingMessage(messages,message))
+							messages.get(message.getUser()).add(message);
+					}
 				}
 			}
 		}
@@ -139,5 +156,9 @@ public class DataReader {
 	
 	private String getCurrentDate(int year, int month, int day) {
 		return String.valueOf(year) + String.valueOf(month) + String.valueOf(day);
+	}
+	
+	private String getDateTime(String currentDate, String time) {
+		return currentDate + " " + time;
 	}
 }

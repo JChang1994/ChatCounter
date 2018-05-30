@@ -2,7 +2,10 @@ package edu.handong.csee.java.hw3;
 
 import java.io.File;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
+import java.util.List;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -82,11 +85,41 @@ public class ChatCounter {
 		
 		for(File file : chatFiles) {
 			if(file.getPath().contains(".txt")) {
-				
+				reader.getMessagesFromTXTFiles(file);
 			}
 			else if(file.getPath().contains(".csv")) {
 				reader.getMessagesFromCSVFiles(file);
 			}
 		}
+		
+		DataWriter writer = new DataWriter();
+		writer.writeAFile(sortByValue(countMessages(reader.getData())), outputPath);
+	}
+	
+	private HashMap<String, Integer> countMessages(HashMap<String,ArrayList<Message>> messages){
+		HashMap<String, Integer> counter = new HashMap<String,Integer>();
+		
+		for(String key:messages.keySet()) {
+			counter.put(key,  messages.get(key).size());
+		}
+		
+		return counter;
+	}
+	
+	private ArrayList<String> sortByValue(final HashMap<String,Integer> map){
+		ArrayList<String> list = new ArrayList<String>();
+		list.addAll(map.keySet());
+		
+		Collections.sort(list,new Comparator<Object>() {
+			@SuppressWarnings("unchecked")
+			public int compare(Object o1, Object o2) {
+				Object v1 = map.get(o1);
+				Object v2 = map.get(o2);
+				
+				return((Comparable<Object>) v1).compareTo(v2);
+			}
+		});
+		Collections.reverse(list);;
+		return list;
 	}
 }
