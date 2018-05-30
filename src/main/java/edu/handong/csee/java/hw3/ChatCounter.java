@@ -1,6 +1,8 @@
 package edu.handong.csee.java.hw3;
 
 import java.io.File;
+import java.util.ArrayList;
+import java.util.HashMap;
 
 import org.apache.commons.cli.CommandLine;
 import org.apache.commons.cli.CommandLineParser;
@@ -78,8 +80,13 @@ public class ChatCounter {
 		File directory = reader.getDirectory(inputPath);
 		File[] chatFiles = reader.getListOfFilesFromDirectory(directory);
 		
-		
-		System.out.println(inputPath + " is the input path you have provided");
-		System.out.println(outputPath + " is the output path you have provided");
+		for(File file : chatFiles) {
+			if(file.getPath().contains(".txt")) {
+				
+			}
+			else if(file.getPath().contains(".csv")) {
+				reader.getMessagesFromCSVFiles(file);
+			}
+		}
 	}
 }

@@ -15,6 +15,12 @@ import org.apache.commons.csv.CSVFormat;
 import org.apache.commons.csv.CSVRecord;
 
 public class DataReader {
+	HashMap<String,ArrayList<Message>> messages = new HashMap<String,ArrayList<Message>>();
+	
+	public HashMap<String,ArrayList<Message>> getData(){
+		return messages;
+	}
+	
 	public File getDirectory(String strDir) {
 		File dataDir = new File(strDir);
 		return dataDir;
@@ -25,8 +31,7 @@ public class DataReader {
 		return dirPath.listFiles();
 	}
 	
-	private HashMap<String,ArrayList<Message>> getMessagesFromCSVFiles(File file){
-		HashMap<String,ArrayList<Message>> messages = new HashMap<String,ArrayList<Message>>();
+	public void getMessagesFromCSVFiles(File file){
 		Reader in;
 		
 		try {
@@ -53,8 +58,6 @@ public class DataReader {
 		catch(IOException e) {
 			e.printStackTrace();
 		}
-		
-		return messages;
 	}
 	
 	private boolean existingMessage(HashMap<String, ArrayList<Message>> messagesToCheck, Message message) {
@@ -93,7 +96,7 @@ public class DataReader {
 		return false;
 	}
 	
-	private HashMap<String,ArrayList<Message>> getMessagesFromTXTFiles(File file){
+	private void getMessagesFromTXTFiles(File file){
 		String thisLine = "";
 		try {
 			BufferedReader br = new BufferedReader(
